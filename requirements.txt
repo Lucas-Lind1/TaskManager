@@ -1,0 +1,5 @@
+FastAPI
+boto3
+uvicorn
+pydantic
+python-dotenv

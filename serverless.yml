@@ -1,0 +1,51 @@
+service: task-manager
+
+provider:
+  name: aws
+  runtime: python3.8
+  region: us-east-1
+
+functions:
+  createTask:
+    handler: src/controllers/create_task.create_task
+    events:
+      - http:
+          path: tasks
+          method: post
+
+  listTasks:
+    handler: src/controllers/list_tasks.list_tasks
+    events:
+      - http:
+          path: tasks
+          method: get
+
+  updateTask:
+    handler: src/controllers/update_task.update_task
+    events:
+      - http:
+          path: tasks/{id}
+          method: put
+
+  deleteTask:
+    handler: src/controllers/delete_task.delete_task
+    events:
+      - http:
+          path: tasks/{id}
+          method: delete
+
+resources:
+  Resources:
+    TasksTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: Tasks
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
